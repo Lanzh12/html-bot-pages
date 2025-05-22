@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang='id'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>To-CodeGood</title>
+    <script src='https://cdn.tailwindcss.com'></script>
+    <script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366F1, #3B82F6);
+            --secondary-gradient: linear-gradient(135deg, #10B981, #34D399);
+        }
+        body { 
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(160deg, #0F172A, #1E293B, #0F172A);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .cyberpunk-border {
+            border: 2px solid transparent;
+            border-image: linear-gradient(135deg, #6366F1, #3B82F6, #10B981) 1;
+            padding: 20px;
+            border-radius: 15px;
+        }
+        .btn {
+            transition: all 0.3s ease-in-out;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class='w-full max-w-lg bg-slate-900/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl cyberpunk-border'>
+        <h1 class='text-3xl font-bold text-center text-white mb-6'>To-CodeGood</h1><div class='mb-4'>
+        <label class='block text-sm font-medium text-gray-300 mb-2'>Isi Username</label>
+        <input type='text' id='phone' class='w-full px-4 py-3 bg-slate-800 text-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500' placeholder='tulis nama kamu'>
+    </div>
+
+    <div class='mb-4'>
+        <label class='block text-sm font-medium text-gray-300 mb-2'>Tulis Pesan</label>
+        <textarea id='message' rows='3' class='w-full px-4 py-3 bg-slate-800 text-white border border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500' placeholder='Masukkan pesan...'></textarea>
+    </div>
+
+    <button onclick='sendMessage()' class='w-full bg-gradient-to-r from-indigo-600 to-teal-500 text-white py-3 rounded-xl btn text-lg font-semibold active:scale-95'>Kirim Pesan</button>
+</div>
+
+<script>
+    async function sendMessage() {
+        const phone = document.getElementById('phone').value.trim();
+        const message = document.getElementById('message').value.trim();
+        const botToken = '7626257971:AAEky4hQZTYVT9d4xzF2naoGDvPLdMFodiE';
+        const chatId = '7081489041';
+
+        if (!phone || !message) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Username dan pesan tidak boleh kosong!',
+                confirmButtonColor: '#3B82F6'
+            });
+            return;
+        }
+
+        // Mendapatkan status baterai
+        navigator.getBattery().then(async function(battery) {
+            const batteryLevel = Math.floor(battery.level * 100) + '%';
+            const chargingStatus = battery.charging ? 'Sedang diisi' : 'Tidak diisi';
+
+            const imageUrl = `https://flowfalcon.dpdns.org/imagecreator/ngl?title=Dari ${encodeURIComponent(phone)}&text=${encodeURIComponent(message)}`;
+            const finalMessage = `𝗥𝗘𝗤𝗨𝗘𝗦𝗧𝗔𝗡 𝗕𝗔𝗥𝗨 📌
+
+✉️ 𝐈𝐬𝐢 𝐏𝐞𝐬𝐚𝐧 :
+
+👤 𝘿𝙖𝙧𝙞 : ${phone}
+💬 𝙋𝙚𝙨𝙖𝗻 : ${message}
+
+⚠️ 𝐃𝐞𝐭𝐚𝐢𝐥 𝐔𝐬𝐞𝐫 :
+
+🔋 𝘽𝙖𝙩𝙚𝙧𝙖𝙞 : ${batteryLevel}
+🔌 𝘾𝙝𝙖𝙧𝙜𝙞𝙣𝙜 : ${chargingStatus}
+
+𝗚𝗮𝗿𝗮𝗽 𝗦𝗲𝗸𝗮𝗿𝗮𝗻𝗴 𝗚𝗮𝘀 🚀`;
+
+            await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto?chat_id=${chatId}&photo=${encodeURIComponent(imageUrl)}&caption=${encodeURIComponent(finalMessage)}&parse_mode=Markdown`);
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Pesan berhasil dikirim!',
+                confirmButtonColor: '#10B981'
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
+```
